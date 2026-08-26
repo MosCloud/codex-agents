@@ -12,6 +12,7 @@
 - 主代理所有权与独立判断：主代理端到端负责目标、设计、规划、风险、验收和交付，并以证据、假设和取舍为依据明确表达分歧与不确定性。
 - 变更纪律：先明确设计、范围、验收标准和所有权边界，再以最小、持久且单一的实现完成已证明的需求，避免无依据的兼容路径和防御性复杂度。
 - 委派与模型路由：仅将可独立界定的复杂执行工作交给子代理；工程执行使用 `gpt-5.6-luna` 与 `reasoning_effort: max`，主代理持续跟踪并在 Luna 不可用或停滞时接管。
+- 子代理执行质量：提供最小相关上下文和明确的任务契约；将工作拆为原子、可验证的单元并尽早报告进展；监控超时不等于任务失败，仅在条件实质改善后重试；若进展未恢复，及时接管。
 - 比例化验证与证据：根据风险和实际受影响边界选择验证范围，区分测量、推导、外推、推断和计划，并记录执行环境及验证取舍。
 - 协调、环境与安全：共享文件、工作树、服务、硬件和外部操作均设置唯一所有者；诊断时区分产品缺陷与权限、沙箱或运行环境影响，并在授权范围内执行外部或破坏性操作。
 - PR 与文档：围绕一个明确结果组织变更，保持标题、实现、测试和文档一致；按读者分层呈现操作说明、评审摘要和详细实验，并从关联评论中解决底层设计问题。
@@ -96,6 +97,7 @@ The repository content can be installed into Codex's global configuration direct
 - Primary-agent ownership and independent judgment: the primary agent owns the objective, design, planning, risk, acceptance, and delivery end to end, grounding decisions in evidence, assumptions, and tradeoffs while stating disagreement and uncertainty clearly.
 - Change discipline: define design, scope, acceptance criteria, and ownership before substantial work, then satisfy the demonstrated requirement through the smallest durable and canonical implementation without speculative compatibility paths or defensive complexity.
 - Delegation and model routing: delegate only independently bounded complex execution work; engineering execution uses `gpt-5.6-luna` with `reasoning_effort: max`, while the primary agent monitors progress and takes over when Luna is unavailable or stalled.
+- Subagent execution quality: provide the minimum relevant context and an explicit task contract; make work atomic and verifiable with early progress; treat monitoring timeouts as distinct from task failure and retry only after materially improved conditions; take over promptly if progress does not resume.
 - Proportional validation and evidence: select validation according to risk and affected boundaries, distinguish measurement from derivation, extrapolation, inference, and plans, and record execution context and validation tradeoffs.
 - Coordination, environment, and safety: assign a single owner to shared files, worktrees, services, hardware, and external operations; separate product defects from permission, sandbox, and runtime effects, and keep external or destructive actions within granted authority.
 - Pull requests and documentation: organize each change around one outcome, keep title, implementation, tests, and documentation aligned, separate operator guidance from review evidence and detailed experiments, and resolve the design concern underlying related comments.

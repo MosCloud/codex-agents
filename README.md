@@ -2,16 +2,23 @@
 
 ## 项目用途
 
-本仓库保存 MosCloud 使用的全局 Codex 代理指导文本，根目录的 `AGENTS.md` 与 `~/.codex/AGENTS.md` 保持字节级一致，便于版本管理、审阅、备份和在新环境中恢复同一套工作约束。
+本仓库保存 MosCloud 使用的全局 Codex 代理指导文本。根目录的 `AGENTS.md` 与 `~/.codex/AGENTS.md` 保持字节级一致，`archive/` 保存历史版本，便于版本管理、审阅、备份和在新环境中恢复同一套工作约束。
 
 这份仓库内容适合安装到 Codex 的全局配置目录，也可以作为项目级 `AGENTS.md` 的参考来源；仓库不包含凭据、模型权重或机器专属数据。
 
 ## `AGENTS.md` 的核心效果
 
-- 主代理职责：主代理负责理解目标、分析证据、设计方案、规划范围、评估风险与取舍、验收结果和最终报告，并可直接完成轻量检查和小范围编辑。
-- 独立判断：建议必须基于证据、假设、风险和取舍，而不是迎合偏好；证据不足、存在分歧或不确定性时要明确说明。
-- 复杂任务委派与模型路由：能够拆分的复杂工作交给子代理并限定边界；工程执行任务（包括实现、profiling、服务操作、测试、基准测试和机械性改动）必须使用 `gpt-5.6-luna` 与 `reasoning_effort: max`；Luna 不可用时由主代理直接执行，或明确报告限制，不静默替换模型；研究与分析任务的模型由主代理选择。
-- 协调与沙箱诊断：为共享工作树、服务、硬件和外部操作分配唯一所有者；诊断异常时区分产品缺陷与 Codex 沙箱的文件系统、网络、系统调用、进程或设备限制，并按审批流程进行必要的非沙箱检查。
+- 作用域与规则路由：全局文件只保存稳定、跨项目的原则；仓库、模型、平台、硬件、环境、版本、基准和路线图等细节由最近的项目级规则、操作手册或报告负责。
+- 主代理所有权与独立判断：主代理端到端负责目标、设计、规划、风险、验收和交付，并以证据、假设和取舍为依据明确表达分歧与不确定性。
+- 变更纪律：先明确设计、范围、验收标准和所有权边界，再以最小、持久且单一的实现完成已证明的需求，避免无依据的兼容路径和防御性复杂度。
+- 委派与模型路由：仅将可独立界定的复杂执行工作交给子代理；工程执行使用 `gpt-5.6-luna` 与 `reasoning_effort: max`，主代理持续跟踪并在 Luna 不可用或停滞时接管。
+- 比例化验证与证据：根据风险和实际受影响边界选择验证范围，区分测量、推导、外推、推断和计划，并记录执行环境及验证取舍。
+- 协调、环境与安全：共享文件、工作树、服务、硬件和外部操作均设置唯一所有者；诊断时区分产品缺陷与权限、沙箱或运行环境影响，并在授权范围内执行外部或破坏性操作。
+- PR 与文档：围绕一个明确结果组织变更，保持标题、实现、测试和文档一致；按读者分层呈现操作说明、评审摘要和详细实验，并从关联评论中解决底层设计问题。
+
+## 历史归档
+
+根目录的 `AGENTS.md` 始终代表当前可安装版本。每次替换前，将旧版原样保存为 `archive/AGENTS-YYYYMMDD-<source-commit>.md`，其中日期是归档日期，短提交号标识旧版来源。归档文件用于追溯，不作为安装入口，也不随新版本改写。
 
 ## Codex 官方发现与优先级语义
 
@@ -69,6 +76,7 @@ git -C /path/to/codex-agents diff --check
 
 ## 适用边界
 
+- 全局 `AGENTS.md` 只规定跨项目工作原则；项目、模型、平台和环境的具体要求应放在适用范围更近的项目级文件或专用文档中。
 - `AGENTS.md` 是给代理使用的指导文本，不是安全边界，不能替代操作系统权限、容器隔离、网络策略、审批流程或密钥管理。
 - 项目级和更接近当前工作目录的规则可以覆盖或补充全局规则，因此安装全局文件不会取消项目维护者的本地约束。
 - 指导文本可以要求使用某个模型或路由，但实际模型是否可用取决于当前 Codex 环境、账户权限、配置和服务状态；若 `gpt-5.6-luna` 不可用，主代理应直接执行工程任务或明确报告限制，不能静默替换模型。
@@ -78,16 +86,23 @@ git -C /path/to/codex-agents diff --check
 
 ## Purpose
 
-This repository stores MosCloud's global Codex agent guidance. The root `AGENTS.md` is byte-for-byte identical to `~/.codex/AGENTS.md`, making the instructions easy to review, back up, restore, and reproduce in a new environment.
+This repository stores MosCloud's global Codex agent guidance. The root `AGENTS.md` is byte-for-byte identical to `~/.codex/AGENTS.md`, while `archive/` retains prior versions for review, backup, restoration, and reproducibility.
 
 The repository content can be installed into Codex's global configuration directory or used as a source for project-level `AGENTS.md` files; it contains no credentials, model weights, or machine-specific data.
 
 ## Core effects of `AGENTS.md`
 
-- Primary-agent responsibility: the primary agent owns goal understanding, evidence-based analysis, design, scope planning, risk and tradeoff decisions, acceptance, and the final report, while still handling lightweight checks and small targeted edits directly.
-- Independent judgment: recommendations must be grounded in evidence, assumptions, risks, and tradeoffs rather than preference; weak evidence, disagreement, and uncertainty must be stated clearly.
-- Complex-task delegation and model routing: divisible complex work is assigned to child agents with explicit boundaries; engineering execution tasks, including implementation, profiling, service operations, tests, benchmarks, and mechanical changes, must use `gpt-5.6-luna` with `reasoning_effort: max`; when Luna is unavailable, the primary agent executes the work directly or reports the limitation, without silently substituting another model; the primary agent chooses the model for research and analysis tasks.
-- Coordination and sandbox diagnostics: shared worktrees, services, hardware, and external operations have a single owner; unexpected behavior is diagnosed by separating product defects from Codex sandbox restrictions on filesystems, networks, system calls, processes, or devices, using the approval flow for necessary unsandboxed checks.
+- Scope and routing: the global file contains stable cross-project principles; repository, model, platform, hardware, environment, version, benchmark, and roadmap details belong in the nearest project guidance, playbook, or report.
+- Primary-agent ownership and independent judgment: the primary agent owns the objective, design, planning, risk, acceptance, and delivery end to end, grounding decisions in evidence, assumptions, and tradeoffs while stating disagreement and uncertainty clearly.
+- Change discipline: define design, scope, acceptance criteria, and ownership before substantial work, then satisfy the demonstrated requirement through the smallest durable and canonical implementation without speculative compatibility paths or defensive complexity.
+- Delegation and model routing: delegate only independently bounded complex execution work; engineering execution uses `gpt-5.6-luna` with `reasoning_effort: max`, while the primary agent monitors progress and takes over when Luna is unavailable or stalled.
+- Proportional validation and evidence: select validation according to risk and affected boundaries, distinguish measurement from derivation, extrapolation, inference, and plans, and record execution context and validation tradeoffs.
+- Coordination, environment, and safety: assign a single owner to shared files, worktrees, services, hardware, and external operations; separate product defects from permission, sandbox, and runtime effects, and keep external or destructive actions within granted authority.
+- Pull requests and documentation: organize each change around one outcome, keep title, implementation, tests, and documentation aligned, separate operator guidance from review evidence and detailed experiments, and resolve the design concern underlying related comments.
+
+## Historical archive
+
+The root `AGENTS.md` is always the current installable version. Before replacing it, preserve the prior file unchanged as `archive/AGENTS-YYYYMMDD-<source-commit>.md`, where the date is the archive date and the short commit identifies the prior version. Archive files are immutable history, not installation targets.
 
 ## Official Codex discovery and precedence
 
@@ -145,6 +160,7 @@ git -C /path/to/codex-agents diff --check
 
 ## Applicability boundaries
 
+- The global `AGENTS.md` defines cross-project working principles only; project, model, platform, and environment specifics belong in more narrowly scoped project files or dedicated documentation.
 - `AGENTS.md` is guidance for an agent, not a security boundary; it cannot replace operating-system permissions, container isolation, network policy, approval workflows, or secret management.
 - Project-level rules and rules closer to the current working directory can override or supplement global rules, so installing the global file does not remove constraints maintained by a project owner.
 - Guidance can request a particular model or route, but model availability depends on the current Codex environment, account permissions, configuration, and service state; when `gpt-5.6-luna` is unavailable, the primary agent should execute engineering work directly or report the limitation, without silently substituting another model.
